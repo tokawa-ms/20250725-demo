@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>レトロテトリス - 80年代風パズルゲーム</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* Tailwind CSS フォールバック */
+        body {
+            background-color: #000;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .retro-colors {
+            --retro-cyan: #00ffff;
+            --retro-green: #00ff00;
+            --retro-yellow: #ffff00;
+            --retro-pink: #ff00ff;
+            --retro-blue: #0088ff;
+            --retro-orange: #ff8800;
+            --retro-purple: #8800ff;
+        }
+        .text-retro-cyan { color: var(--retro-cyan); }
+        .text-retro-green { color: var(--retro-green); }
+        .text-retro-yellow { color: var(--retro-yellow); }
+        .text-retro-pink { color: var(--retro-pink); }
+        .text-retro-blue { color: var(--retro-blue); }
+        .text-retro-orange { color: var(--retro-orange); }
+        .text-retro-purple { color: var(--retro-purple); }
+        .bg-retro-green { background-color: var(--retro-green); }
+        .bg-gray-900 { background-color: #111; }
+        .bg-gray-700 { background-color: #444; }
+        .bg-gray-600 { background-color: #666; }
+        .border-2 { border-width: 2px; }
+        .border-4 { border-width: 4px; }
+        .border-retro-cyan { border-color: var(--retro-cyan); }
+        .border-retro-green { border-color: var(--retro-green); }
+        .border-retro-yellow { border-color: var(--retro-yellow); }
+        .border-retro-pink { border-color: var(--retro-pink); }
+        .border-retro-blue { border-color: var(--retro-blue); }
+        .border-retro-orange { border-color: var(--retro-orange); }
+        .border-retro-purple { border-color: var(--retro-purple); }
+        .border-gray-600 { border-color: #666; }
+        .rounded { border-radius: 0.25rem; }
+        .p-4 { padding: 1rem; }
+        .p-2 { padding: 0.5rem; }
+        .px-2 { padding-left: 0.5rem; padding-right: 0.5rem; }
+        .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .text-xl { font-size: 1.25rem; }
+        .text-lg { font-size: 1.125rem; }
+        .text-sm { font-size: 0.875rem; }
+        .text-xs { font-size: 0.75rem; }
+        .text-2xl { font-size: 1.5rem; }
+        .text-4xl { font-size: 2.25rem; }
+        .text-6xl { font-size: 3.75rem; }
+        .text-white { color: white; }
+        .text-black { color: black; }
+        .text-center { text-align: center; }
+        .font-bold { font-weight: bold; }
+        .flex { display: flex; }
+        .flex-1 { flex: 1; }
+        .flex-col { flex-direction: column; }
+        .items-center { align-items: center; }
+        .justify-center { justify-content: center; }
+        .justify-between { justify-content: space-between; }
+        .space-y-1 > * + * { margin-top: 0.25rem; }
+        .space-y-3 > * + * { margin-top: 0.75rem; }
+        .space-y-4 > * + * { margin-top: 1rem; }
+        .gap-4 { gap: 1rem; }
+        .hidden { display: none; }
+        .absolute { position: absolute; }
+        .relative { position: relative; }
+        .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+        .max-h-[calc(100vh-120px)] { max-height: calc(100vh - 120px); }
+        @media (min-width: 1024px) {
+            .lg\\:flex-row { flex-direction: row; }
+            .lg\\:w-64 { width: 16rem; }
+        }
+        @media (max-width: 768px) {
+            .text-4xl { font-size: 2rem; }
+            .text-6xl { font-size: 3rem; }
+        }
+    </style>
+    <script>
+        // Tailwind CSS のカスタム設定
+        if (typeof tailwind !== 'undefined') {
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            'retro-blue': '#0066cc',
+                            'retro-green': '#00cc66',
+                            'retro-pink': '#cc0066',
+                            'retro-yellow': '#cccc00',
+                            'retro-cyan': '#00cccc',
+                            'retro-orange': '#cc6600',
+                            'retro-purple': '#6600cc'
+                        },
+                        fontFamily: {
+                            'pixel': ['Courier New', 'monospace']
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-black text-green-400 font-pixel min-h-screen overflow-hidden">
+    <!-- メインコンテナ -->
+    <div class="container mx-auto px-4 py-2 h-screen flex flex-col">
+        <!-- ヘッダー -->
+        <header class="text-center mb-4">
+            <h1 class="text-4xl md:text-6xl font-bold text-retro-cyan mb-2 pixel-text">
+                🕹️ RETRO TETRIS 🕹️
+            </h1>
+            <p class="text-lg text-retro-yellow">80年代風クラシックパズルゲーム</p>
+        </header>
+
+        <!-- ゲームメインエリア -->
+        <div class="flex-1 flex flex-col lg:flex-row gap-4 max-h-[calc(100vh-120px)]">
+            <!-- 左サイドパネル -->
+            <div class="lg:w-64 space-y-4">
+                <!-- スコア表示 -->
+                <div class="bg-gray-900 border-2 border-retro-green p-4 rounded">
+                    <h3 class="text-retro-green text-xl mb-2">📊 SCORE</h3>
+                    <div class="text-2xl text-white mb-2" id="current-score">000000</div>
+                    <div class="text-sm">
+                        <span class="text-retro-yellow">HI-SCORE:</span>
+                        <span class="text-white" id="high-score">000000</span>
+                    </div>
+                    <div class="text-sm mt-2">
+                        <span class="text-retro-cyan">LINES:</span>
+                        <span class="text-white" id="lines-cleared">0</span>
+                    </div>
+                    <div class="text-sm mt-2">
+                        <span class="text-retro-pink">LEVEL:</span>
+                        <span class="text-white" id="current-level">1</span>
+                    </div>
+                </div>
+
+                <!-- ネクストピース -->
+                <div class="bg-gray-900 border-2 border-retro-blue p-4 rounded">
+                    <h3 class="text-retro-blue text-xl mb-2">🔮 NEXT</h3>
+                    <canvas id="next-canvas" width="80" height="80" class="border border-gray-600"></canvas>
+                </div>
+
+                <!-- 操作説明 -->
+                <div class="bg-gray-900 border-2 border-retro-yellow p-4 rounded text-xs">
+                    <h3 class="text-retro-yellow text-lg mb-2">🎮 CONTROLS</h3>
+                    <div class="space-y-1 text-white">
+                        <div>← → : 移動</div>
+                        <div>↑ : 回転</div>
+                        <div>↓ : 高速落下</div>
+                        <div>SPACE : 一気に落下</div>
+                        <div>P : 一時停止</div>
+                        <div>R : リセット</div>
+                        <div>S : スタート</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ゲーム画面 -->
+            <div class="flex-1 flex justify-center items-center">
+                <div class="relative">
+                    <canvas id="game-canvas" width="300" height="600" 
+                            class="border-4 border-retro-cyan bg-black pixel-canvas"></canvas>
+                    
+                    <!-- ゲームオーバー画面 -->
+                    <div id="game-over-screen" class="absolute inset-0 bg-black bg-opacity-90 flex flex-col justify-center items-center text-center hidden">
+                        <div class="text-4xl text-retro-pink mb-4">GAME OVER</div>
+                        <div class="text-xl text-white mb-2">Final Score: <span id="final-score">0</span></div>
+                        <div class="text-lg text-retro-yellow mb-4">Press R to Restart</div>
+                    </div>
+
+                    <!-- 一時停止画面 -->
+                    <div id="pause-screen" class="absolute inset-0 bg-black bg-opacity-90 flex flex-col justify-center items-center text-center hidden">
+                        <div class="text-4xl text-retro-yellow mb-4">PAUSED</div>
+                        <div class="text-lg text-white">Press P to Continue</div>
+                    </div>
+
+                    <!-- スタート画面 -->
+                    <div id="start-screen" class="absolute inset-0 bg-black bg-opacity-95 flex flex-col justify-center items-center text-center">
+                        <div class="text-3xl text-retro-cyan mb-4">🎮 READY? 🎮</div>
+                        <div class="text-lg text-white mb-4">Press S to Start</div>
+                        <div class="text-sm text-retro-yellow">🎵 BGM will play during game</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右サイドパネル -->
+            <div class="lg:w-64 space-y-4">
+                <!-- 設定パネル -->
+                <div class="bg-gray-900 border-2 border-retro-purple p-4 rounded">
+                    <h3 class="text-retro-purple text-xl mb-2">⚙️ SETTINGS</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-white">BGM:</span>
+                            <button id="bgm-toggle" class="px-2 py-1 bg-retro-green text-black rounded text-xs">ON</button>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-white">SFX:</span>
+                            <button id="sfx-toggle" class="px-2 py-1 bg-retro-green text-black rounded text-xs">ON</button>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-white">Speed:</span>
+                            <select id="speed-select" class="px-2 py-1 bg-gray-700 text-white rounded text-xs">
+                                <option value="slow">Slow</option>
+                                <option value="normal" selected>Normal</option>
+                                <option value="fast">Fast</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 統計情報 -->
+                <div class="bg-gray-900 border-2 border-retro-orange p-4 rounded">
+                    <h3 class="text-retro-orange text-xl mb-2">📈 STATS</h3>
+                    <div class="text-xs space-y-1 text-white">
+                        <div>Games Played: <span id="games-played">0</span></div>
+                        <div>Best Score: <span id="best-score">0</span></div>
+                        <div>Total Lines: <span id="total-lines">0</span></div>
+                        <div>Play Time: <span id="play-time">00:00</span></div>
+                    </div>
+                </div>
+
+                <!-- レトロメッセージ -->
+                <div class="bg-gray-900 border-2 border-retro-pink p-4 rounded">
+                    <h3 class="text-retro-pink text-lg mb-2">💭 RETRO MSG</h3>
+                    <div id="retro-message" class="text-xs text-white">
+                        Welcome to the 80s!<br>
+                        🎮 Insert coin to play! 🎮
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/script.js"></script>
+</body>
+</html>
