@@ -120,7 +120,12 @@ class Tetromino {
         this.y = y;
         this.color = GAME_CONFIG.COLORS[type];
         
+        // 無限ループ防止フラグ
+        this.isConstructing = true;
+        
         console.log(`🔷 新しいピース生成: ${type} at (${x}, ${y})`);
+        
+        this.isConstructing = false;
     }
     
     rotate() {
@@ -269,6 +274,9 @@ class TetrisGame {
         this.nextCtx.imageSmoothingEnabled = false;
         
         this.music = new MusicManager();
+        
+        // 無限ループ防止フラグ
+        this.isGeneratingPiece = false;
         
         console.log('🎮 テトリスゲームを初期化しました');
     }
@@ -437,6 +445,14 @@ class TetrisGame {
     }
     
     generateNextPiece() {
+        // 生成中フラグをチェックして無限ループを防止
+        if (this.isGeneratingPiece) {
+            console.log('⚠️ ピース生成中のため処理をスキップ');
+            return;
+        }
+        
+        this.isGeneratingPiece = true;
+        
         const types = Object.keys(TETROMINOS);
         const randomType = types[Math.floor(Math.random() * types.length)];
         gameState.nextPiece = new Tetromino(randomType);
@@ -445,6 +461,8 @@ class TetrisGame {
         
         // nextPieceキャンバスを更新
         this.drawNextPiece();
+        
+        this.isGeneratingPiece = false;
     }
     
     movePiece(deltaX, deltaY) {
@@ -757,25 +775,25 @@ class TetrisGame {
     }
     
     drawNextPiece() {
+        if (!gameState.nextPiece || this.isGeneratingPiece) return;
+        
         this.nextCtx.fillStyle = '#000000';
         this.nextCtx.fillRect(0, 0, this.nextCanvas.width, this.nextCanvas.height);
         
-        if (gameState.nextPiece) {
-            const cellSize = 15;
-            const offsetX = (this.nextCanvas.width - gameState.nextPiece.shape[0].length * cellSize) / 2;
-            const offsetY = (this.nextCanvas.height - gameState.nextPiece.shape.length * cellSize) / 2;
-            
-            for (let y = 0; y < gameState.nextPiece.shape.length; y++) {
-                for (let x = 0; x < gameState.nextPiece.shape[y].length; x++) {
-                    if (gameState.nextPiece.shape[y][x]) {
-                        this.nextCtx.fillStyle = gameState.nextPiece.color;
-                        this.nextCtx.fillRect(
-                            offsetX + x * cellSize,
-                            offsetY + y * cellSize,
-                            cellSize - 1,
-                            cellSize - 1
-                        );
-                    }
+        const cellSize = 15;
+        const offsetX = (this.nextCanvas.width - gameState.nextPiece.shape[0].length * cellSize) / 2;
+        const offsetY = (this.nextCanvas.height - gameState.nextPiece.shape.length * cellSize) / 2;
+        
+        for (let y = 0; y < gameState.nextPiece.shape.length; y++) {
+            for (let x = 0; x < gameState.nextPiece.shape[y].length; x++) {
+                if (gameState.nextPiece.shape[y][x]) {
+                    this.nextCtx.fillStyle = gameState.nextPiece.color;
+                    this.nextCtx.fillRect(
+                        offsetX + x * cellSize,
+                        offsetY + y * cellSize,
+                        cellSize - 1,
+                        cellSize - 1
+                    );
                 }
             }
         }
