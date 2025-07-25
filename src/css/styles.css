@@ -1,0 +1,274 @@
+/* レトロピクセルアートスタイルのCSS */
+
+/* ピクセルアートフォント効果 */
+.pixel-text {
+    text-shadow: 
+        2px 2px 0px #000,
+        -2px -2px 0px #000,
+        2px -2px 0px #000,
+        -2px 2px 0px #000;
+    letter-spacing: 2px;
+}
+
+/* キャンバスのピクセル効果 */
+.pixel-canvas {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    box-shadow: 
+        0 0 20px rgba(0, 204, 204, 0.5),
+        inset 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+/* レトロボタンスタイル */
+.retro-button {
+    background: linear-gradient(45deg, #00cc66, #009944);
+    border: 2px solid #00ff88;
+    color: #000;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.retro-button:hover {
+    background: linear-gradient(45deg, #00ff88, #00cc66);
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+    transform: translateY(-1px);
+}
+
+.retro-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 0 5px rgba(0, 255, 136, 0.3);
+}
+
+/* スキャンライン効果 */
+.scanlines {
+    position: relative;
+}
+
+.scanlines::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 255, 0, 0.03) 2px,
+        rgba(0, 255, 0, 0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 1000;
+}
+
+/* グロー効果 */
+.glow-green {
+    text-shadow: 
+        0 0 5px #00ff00,
+        0 0 10px #00ff00,
+        0 0 15px #00ff00,
+        0 0 20px #00ff00;
+}
+
+.glow-cyan {
+    text-shadow: 
+        0 0 5px #00ffff,
+        0 0 10px #00ffff,
+        0 0 15px #00ffff,
+        0 0 20px #00ffff;
+}
+
+.glow-pink {
+    text-shadow: 
+        0 0 5px #ff00ff,
+        0 0 10px #ff00ff,
+        0 0 15px #ff00ff,
+        0 0 20px #ff00ff;
+}
+
+/* ブリンク効果 */
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+.blink {
+    animation: blink 1s infinite;
+}
+
+/* パルス効果 */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+/* レインボー効果 */
+@keyframes rainbow {
+    0% { color: #ff0000; }
+    16.66% { color: #ff8800; }
+    33.33% { color: #ffff00; }
+    50% { color: #00ff00; }
+    66.66% { color: #0088ff; }
+    83.33% { color: #8800ff; }
+    100% { color: #ff0000; }
+}
+
+.rainbow {
+    animation: rainbow 3s infinite;
+}
+
+/* レトロボーダー */
+.retro-border {
+    border: 2px solid;
+    border-image: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00, #00ff00) 1;
+    position: relative;
+}
+
+.retro-border::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    background: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00, #00ff00);
+    z-index: -1;
+    opacity: 0.3;
+    filter: blur(2px);
+}
+
+/* 粒子効果 */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.float {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* レスポンシブ調整 */
+@media (max-width: 768px) {
+    .pixel-text {
+        font-size: 2rem;
+        text-shadow: 
+            1px 1px 0px #000,
+            -1px -1px 0px #000,
+            1px -1px 0px #000,
+            -1px 1px 0px #000;
+        letter-spacing: 1px;
+    }
+    
+    .pixel-canvas {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+@media (max-width: 640px) {
+    .pixel-text {
+        font-size: 1.5rem;
+    }
+}
+
+/* カスタムスクロールバー */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #00ff00, #008800);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #00ff88, #00aa44);
+}
+
+/* セレクトボックスのスタイル */
+select {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300ff00' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 16px;
+    padding-right: 32px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+/* フォーカス効果 */
+button:focus,
+select:focus {
+    outline: 2px solid #00ff00;
+    outline-offset: 2px;
+}
+
+/* キーフレームアニメーション for ゲーム要素 */
+@keyframes line-clear {
+    0% { background-color: white; }
+    25% { background-color: yellow; }
+    50% { background-color: white; }
+    75% { background-color: yellow; }
+    100% { background-color: transparent; }
+}
+
+.line-clear {
+    animation: line-clear 0.5s ease-in-out;
+}
+
+@keyframes piece-land {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.piece-land {
+    animation: piece-land 0.2s ease-in-out;
+}
+
+/* ローディング効果 */
+@keyframes loading {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading {
+    animation: loading 1s linear infinite;
+}
+
+/* エラーメッセージ */
+.error-message {
+    background: linear-gradient(45deg, #ff0000, #cc0000);
+    color: white;
+    border: 2px solid #ff4444;
+    padding: 10px;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* 成功メッセージ */
+.success-message {
+    background: linear-gradient(45deg, #00ff00, #00cc00);
+    color: black;
+    border: 2px solid #44ff44;
+    padding: 10px;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: bold;
+}
